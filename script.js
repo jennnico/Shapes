@@ -1,14 +1,12 @@
-//import React from 'react';
-//import ReactDOM from 'react-dom';
 //resources: https://www.youtube.com/watch?v=v6Q5NryHN5s&t=671s
 //https://www.youtube.com/watch?v=3HMtarQAt3A&t=1193s
 
 let Panel = ReactBootstrap.Panel;
 let Accordion = ReactBootstrap.Accordion;
 
-
 class Shapes extends React.Component{
 
+//set the state
 constructor(){
  super();
   this.state = {
@@ -32,28 +30,25 @@ onAttributeChange = v => {
   this.setState({ newAttribute: v.target.value })
 }
 
-//make a copy of shapes, add new info, update state
+//Add a shape by making a copy of shapes, adding new info, updating state
 onClick = () => {
   let shapesCopy = this.state.shapes.slice();
   shapesCopy.push({shape: this.state.newCategory, attributes: []} );
-  
   this.setState({ shapes: shapesCopy, newCategory: ""});
 }
 
+//DELETE a shape by making a copy, splicing, updating state
 delete = index => {
   let shapesCopy = this.state.shapes.slice();
-  shapesCopy.splice(this.index, 1);
-  
+  shapesCopy.splice(index, 1);
   this.setState({ shapes: shapesCopy });
 }
 
 //add Attributes to the shapes. Not working yet
-addAttribute = () => {
-  let aCopy = this.state.shapes.attributes.slice();
-  aCopy.push(this.state.newAttribute);
-  
-  this.setState({ shapes: shapes, newCategory: aCopy});
-  console.log(shapes);
+addAttribute(attribute, index){
+  let shapesCopy = this.state.shapes.slice();
+  shapesCopy[index] = {shape:shapesCopy[index].shape, attribute: attribute};
+  this.setState({shapesCopy});
 }
 
 render (){
@@ -67,17 +62,17 @@ render (){
              {shape.attributes.map((item)=>(
                <li key={item}>{item}</li>
              ))}
-               <input placeholder="Enter new attribute" value = {this.state.newAttribute} onChange={this.onAttributeChange}/>
-               <button onClick = {this.addAttribute}>Add Attribute</button>
-               <br />
-               <button onClick = {() => this.delete()}>DELETE shape</button>
             </ul> 
+            <input placeholder="Enter new attribute" value = {this.state.newAttribute} onChange={this.onAttributeChange}/>
+            <button onClick = {() => this.addAttribute(newAttribute, index)}>Add Attribute</button>
+            <br />
+            <button onClick = {() => this.delete(index)}>DELETE shape</button>
           </Panel>
         ))}
       </Accordion>
-      <input placeholder="Enter new category" value = {this.state.newCategory} onChange={this.onInputChange}/>
+      <input placeholder="Enter new shape" value = {this.state.newCategory} onChange={this.onInputChange}/>
       <br />
-      <button onClick= {this.onClick}>Add Category!</button>
+      <button onClick= {this.onClick}>Add Shape!</button>
     </div>
   );
 }
