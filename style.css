@@ -1,0 +1,38 @@
+body{
+  text-align: center;
+  background: #e86161;
+  margin-top: 1rem;
+  color: #3d2424;
+}
+
+h1{
+  font-family: 'Titan One', cursive;
+}
+
+button{
+  background: #3d2424;
+  border: solid #3d2424;
+  color: white;
+  margin: 0.5rem;
+  border-radius: 15px;
+  height: 4rem;
+}
+
+button:hover{
+  color: #e86161;
+  background: white;
+  border: solid #3d2424;
+}
+
+
+.category{
+  background: white;
+  color: #3d2424;
+  width: 50rem;
+  border-radius: 15px;
+  margin-left:auto; 
+  margin-right:auto;
+  font-family: 'Coming Soon', cursive;
+}
+
+
