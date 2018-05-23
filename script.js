@@ -28,7 +28,7 @@ constructor(){
 };
   }
   
-  //close the modal
+//close the modal
 close = () => {
     if(this.state.showAdd){
       this.setState({showAdd: false})
@@ -39,16 +39,6 @@ close = () => {
 open = (state) =>{
     this.setState({[state]: true});
   }
-  
-//show what you're typing in the "new category" input
-onInputChange = e => {
-  this.setState({ newCategory: e.target.value })
-}
-
-//show what you're typing in the "new attribute" input
-onAttributeChange = v => {
-  this.setState({ newAttribute: v.target.value })
-}
 
 //DELETE a shape by making a copy, splicing, updating state
 delete = index => {
@@ -57,20 +47,13 @@ delete = index => {
   this.setState({ shapes: shapesCopy });
 }
 
-//update new Shape
+//update new Shape, so it can be added to the shapes array
 updateNewShape(shape, attributes){
   this.setState({ newShape:{shape: shape, attributes: attributes} });
   //console.log(newShape);
 } 
 
-//Add a shape by making a copy of shapes, adding new info, updating state
-onClick = () => {
-  let shapesCopy2 = this.state.shapes.slice();
-  shapesCopy2.push({shape: this.state.newCategory, attributes: []} );
-  this.setState({ shapes: shapesCopy2, newCategory: ""});
-}
-
-//saves new shape to shapes
+//New Shape has been updated. Add it to the shapes array and reset newshape
 saveNewShape(newShape){
   let shapesCopy = this.state.shapes.slice();
   //shapesCopy.push({shape: this.state.newShape.shape, attributes: this.state.newShape.attributes});
@@ -117,8 +100,7 @@ render (){
               onChange = {(event) => this.updateNewShape(event.target.value, newShape.attributes)}
               ></FormControl>
              </FormGroup>
-           
-            
+                
           <FormGroup controlID="formgroup2">
             <ControlLabel>Shape Name</ControlLabel>
             <FormControl 
@@ -137,7 +119,6 @@ render (){
         </Modal.Header>
       </Modal>
       
-
       <button onClick = {(event) =>this.open("showAdd")}>Add a New Shape!</button>
     </div>
   );
