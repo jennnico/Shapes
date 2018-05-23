@@ -1,8 +1,14 @@
 //resources: https://www.youtube.com/watch?v=v6Q5NryHN5s&t=671s
 //https://www.youtube.com/watch?v=3HMtarQAt3A&t=1193s
-
+let ButtonToolbar = ReactBootstrap.ButtonToolbar;
+let Button = ReactBootstrap.Button;
 let Panel = ReactBootstrap.Panel;
 let Accordion = ReactBootstrap.Accordion;
+let Modal = ReactBootstrap.Modal;
+let FormGroup = ReactBootstrap.FormGroup;
+let ControlLabel = ReactBootstrap.ControlLabel;
+let FormControl = ReactBootstrap.FormControl;
+
 
 class Shapes extends React.Component{
 
@@ -17,9 +23,23 @@ constructor(){
   ],
     newCategory: "",
     newAttribute: "",
+    showAdd: false,
+    newShape:{shape:"", attributes:[]},
 };
   }
+  
+  //close the modal
+close = () => {
+    if(this.state.showAdd){
+      this.setState({showAdd: false})
+    }
+  }
 
+//open the modal
+open = (state) =>{
+    this.setState({[state]: true});
+  }
+  
 //show what you're typing in the "new category" input
 onInputChange = e => {
   this.setState({ newCategory: e.target.value })
@@ -30,13 +50,6 @@ onAttributeChange = v => {
   this.setState({ newAttribute: v.target.value })
 }
 
-//Add a shape by making a copy of shapes, adding new info, updating state
-onClick = () => {
-  let shapesCopy = this.state.shapes.slice();
-  shapesCopy.push({shape: this.state.newCategory, attributes: []} );
-  this.setState({ shapes: shapesCopy, newCategory: ""});
-}
-
 //DELETE a shape by making a copy, splicing, updating state
 delete = index => {
   let shapesCopy = this.state.shapes.slice();
@@ -44,35 +57,88 @@ delete = index => {
   this.setState({ shapes: shapesCopy });
 }
 
-//add Attributes to the shapes. Not working yet
-addAttribute(attribute, index){
+//update new Shape
+updateNewShape(shape, attributes){
+  this.setState({ newShape:{shape: shape, attributes: attributes} });
+  //console.log(newShape);
+} 
+
+//Add a shape by making a copy of shapes, adding new info, updating state
+onClick = () => {
+  let shapesCopy2 = this.state.shapes.slice();
+  shapesCopy2.push({shape: this.state.newCategory, attributes: []} );
+  this.setState({ shapes: shapesCopy2, newCategory: ""});
+}
+
+//saves new shape to shapes
+saveNewShape(newShape){
   let shapesCopy = this.state.shapes.slice();
-  shapesCopy[index] = {shape:shapesCopy[index].shape, attribute: attribute};
-  this.setState({shapesCopy});
+  //shapesCopy.push({shape: this.state.newShape.shape, attributes: this.state.newShape.attributes});
+  shapesCopy.push(this.state.newShape)
+  this.setState({ shapes: shapesCopy});
+  this.setState({newShape: {shape: '', attributes: []}});
+  this.close();
 }
 
 render (){
-  const {shapes} = this.state;
+  //console.log(this.state.newShape);
+  const {shapes, newShape} = this.state;
   return(
     <div>
-      <Accordion>
-        {shapes.map((shape, index) =>(
-          <Panel className = "category" header={shape.shape} eventKey = {index} key = {index}>
-            <ul> 
-             {shape.attributes.map((item)=>(
-               <li key={item}>{item}</li>
-             ))}
-            </ul> 
-            <input placeholder="Enter new attribute" value = {this.state.newAttribute} onChange={this.onAttributeChange}/>
-            <button onClick = {() => this.addAttribute(newAttribute, index)}>Add Attribute</button>
-            <br />
-            <button onClick = {() => this.delete(index)}>DELETE shape</button>
-          </Panel>
-        ))}
-      </Accordion>
-      <input placeholder="Enter new shape" value = {this.state.newCategory} onChange={this.onInputChange}/>
-      <br />
-      <button onClick= {this.onClick}>Add Shape!</button>
+      {shapes.map((shape, index) =>(
+        <Panel className = "category" header={shape.shape} eventKey = {index} key = {index}>
+          <Panel.Heading>
+            <Panel.Title toggle>{shape.shape}</Panel.Title>
+          </Panel.Heading>
+            <Panel.Collapse>
+            <Panel.Body>
+              <ul> 
+              {shape.attributes.map((item)=>(
+                <li key={item}>{item}</li>
+              ))}
+              </ul> 
+              <button onClick = {() => this.delete(index)}>DELETE shape</button>
+            </Panel.Body>
+            </Panel.Collapse>
+        </Panel>
+      ))}
+  
+      <Modal show={this.state.showAdd} onHide={this.close}>
+      <Modal.Header closeButton>
+        <Modal.Title>Add Shape</Modal.Title>
+        <Modal.Body>
+          <form>
+          <FormGroup controlID="formgroup">
+            <ControlLabel>Shape Name</ControlLabel>
+            <FormControl 
+              type="text" 
+              placeholder="Enter Shape Name"
+              value = {newShape.shape}
+              onChange = {(event) => this.updateNewShape(event.target.value, newShape.attributes)}
+              ></FormControl>
+             </FormGroup>
+           
+            
+          <FormGroup controlID="formgroup2">
+            <ControlLabel>Shape Name</ControlLabel>
+            <FormControl 
+              type="textarea" 
+              placeholder="Enter Attributes (Separate by Commas)"
+              onChange = {(event) => this.updateNewShape(newShape.shape, event.target.value.split(","))}
+              value = {newShape.attributes}
+              ></FormControl>
+          </FormGroup>
+          </form>
+          
+        </Modal.Body>
+        <Modal.Footer>
+          <button onClick= {(event) =>this.saveNewShape(newShape)}>Save New Shape</button>
+        </Modal.Footer>
+        </Modal.Header>
+      </Modal>
+      
+
+      <button onClick = {(event) =>this.open("showAdd")}>Add a New Shape!</button>
     </div>
   );
 }
