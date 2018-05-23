@@ -10,4 +10,4 @@ Each shape, and its attributes, are stored in an array of shape objects.
 
 Shape names are displayed using .map() and by setting Panel.Title.
 
-The application allows the user to add shapes through the use of .slice(), .push(), .split(), .target.value, and this.setState.
+The application allows the user to add shapes through the use of .slice(), .push(), .split(), .target.value, and this.setState. It allows the user to delete shapes using .slice(), .splice(), and this.setState.
